@@ -1190,6 +1190,70 @@
     <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
   <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="nc-数组中的最长连续子序列">NC 数组中的最长连续子序列</h2><p>给定无序数组arr，返回其中最长的连续序列的长度(要求值连续，位置可以不连续,例如 3,4,5,6为连续的自然数）</p><p>直接排序再双指针移动当然可行，但是速度太慢。可以选择使用哈希法：</p><p>从头开始遍历</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre><td class="rouge-code"><pre><span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">MLS</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// write code here</span>
+  <span class="c1">//并查集，相差为1的数字之间有边，如此统计连通分量内的顶点个数即可</span>
+  <span class="c1">//但是这种时间复杂度比较高，排序又太简单</span>
+  <span class="c1">//如何不排序，并找到这个最长上升序列呢？</span>
+  <span class="c1">//用哈希法，从头开始遍历数组元素，如果当前数字存在于哈希表中，直接跳过</span>
+  <span class="c1">//如果当前数字不存在哈希表中，那么检查arr[i] - 1 和 arr[i] + 1是否在哈希表中，</span>
+  <span class="c1">//如果存在，那么就能连接起来成为更长的序列</span>
+  <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+  <span class="k">for</span><span class="o">(</span><span class="nc">Integer</span> <span class="n">num</span> <span class="o">:</span> <span class="n">arr</span><span class="o">){</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span><span class="o">))</span>    <span class="k">continue</span><span class="o">;</span>
+    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)){</span>
+      <span class="c1">//num和num-1可以合并，map.get(num-1)是以num-1为结尾的最长连续序列长度</span>
+      <span class="n">merge</span><span class="o">(</span><span class="n">map</span><span class="o">,</span> <span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">num</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="o">)){</span>
+      <span class="n">merge</span><span class="o">(</span><span class="n">map</span><span class="o">,</span> <span class="n">num</span><span class="o">,</span> <span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="kt">void</span> <span class="nf">merge</span><span class="o">(</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">,</span> <span class="kt">int</span> <span class="n">less</span><span class="o">,</span> <span class="kt">int</span> <span class="n">more</span><span class="o">){</span>
+  <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="n">less</span> <span class="o">-</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">less</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span><span class="c1">//左边界</span>
+  <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="n">more</span> <span class="o">+</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">more</span><span class="o">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span><span class="c1">//右边界</span>
+  <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+  <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span><span class="c1">//为什么只需要更新左右边界的长度呢？因为传进来的参数中，一定有一个是边界</span>
+  <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span><span class="c1">//也就是说，肯定在连接的时候，我们肯定是跟某个边界连接的，所以只需要更新边界</span>
+<span class="o">}</span>
 </pre></table></code></div></div><h2 id="120三角形最小路径和">120.三角形最小路径和</h2><p>给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。</p><p>和网格类型的题目很类似，只不过只在下三角进行迭代。分三步走：</p><p><strong>建立dp模型</strong>：令dp[i]表示从当前结点走到最后一层结点所需的最小路径和。</p><p><strong>初始化边界</strong>：最后一层结点的最小路径和就是本身。</p><p><strong>确定状态转移方程</strong>：仍旧是用滚动数组优化空间，当前结点只能从正下方结点或者右下方结点走来，所以：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre><td class="rouge-code"><pre><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">triangle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">j</span><span class="o">)</span> <span class="o">+</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">]);</span>
 </pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -2145,5 +2209,439 @@
         <span class="o">}</span>
         <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
     <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="nc-87-丢棋子问题">NC 87 丢棋子问题</h2><p>一座大楼有<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=0%E2%88%BCN%5C" alt="img" />层，地面算作第0层，最高的一层为第 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=N%5C" alt="img" />层。已知棋子从第0层掉落肯定不会摔碎，从第<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=i%5C" alt="img" />层掉落可能会摔碎，也可能不会摔碎<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=(1%E2%A9%BDi%E2%A9%BDN)%5C" alt="img" />。给定整数<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=N%5C" alt="img" />作为楼层数，再给定整数<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://www.nowcoder.com/equation?tex=K%5C" alt="img" />作为棋子数，返回如果想找到棋子不会摔碎的最高层数，即使在最差的情况下扔的最小次数。一次只能扔一个棋子。</p><p>输入</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>105,2
+</pre></table></code></div></div><p>返回值</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>14
+</pre></table></code></div></div><p>说明</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre><td class="rouge-code"><pre>第一个棋子先在14层扔，碎了则用仅存的一个棋子试1~13层
+若没碎，第一个棋子继续在27层扔，碎了则用仅存的一个棋子试15~26层
+若没碎，第一个棋子继续在39层扔，碎了则用仅存的一个棋子试28~38层
+若没碎，第一个棋子继续在50层扔，碎了则用仅存的一个棋子试40~49层
+若没碎，第一个棋子继续在60层扔，碎了则用仅存的一个棋子试51~59层
+若没碎，第一个棋子继续在69层扔，碎了则用仅存的一个棋子试61~68层
+若没碎，第一个棋子继续在77层扔，碎了则用仅存的一个棋子试70~76层
+若没碎，第一个棋子继续在84层扔，碎了则用仅存的一个棋子试78~83层
+若没碎，第一个棋子继续在90层扔，碎了则用仅存的一个棋子试85~89层
+若没碎，第一个棋子继续在95层扔，碎了则用仅存的一个棋子试91~94层
+若没碎，第一个棋子继续在99层扔，碎了则用仅存的一个棋子试96~98层
+若没碎，第一个棋子继续在102层扔，碎了则用仅存的一个棋子试100、101层
+若没碎，第一个棋子继续在104层扔，碎了则用仅存的一个棋子试103层
+若没碎，第一个棋子继续在105层扔，若到这一步还没碎，那么105便是结果 
+</pre></table></code></div></div><p>备注:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>0≤N,K≤10^6
+</pre></table></code></div></div><p>动态规划：</p><ol><li><p>设<code class="language-plaintext highlighter-rouge">dp[i][j]</code>表示给定<code class="language-plaintext highlighter-rouge">i</code>个楼层，<code class="language-plaintext highlighter-rouge">j</code>个棋子，所需要的最大实验次数</p></li><li><p>初始化边界：当楼层为0时，根本不用试；当棋子只有一颗时，只能从下到上一层一层试</p></li><li><p>状态转移：假设当前楼层最高为<code class="language-plaintext highlighter-rouge">i</code>层，棋子由<code class="language-plaintext highlighter-rouge">j</code>颗，那么假设当前在第<code class="language-plaintext highlighter-rouge">u</code>层丢棋子，那么棋子有两种状态：</p><ol><li>棋子碎了，那么就只能往低楼层试了，并且棋子数目要减一，即<code class="language-plaintext highlighter-rouge">dp[i][j] = dp[u-1][j-1]</code></li><li>棋子没碎，那么可以往高楼层试，棋子数目不变，即<code class="language-plaintext highlighter-rouge">dp[i][j] = dp[i+1][j]</code></li></ol><p>为了得到最差的情况，那么要取这二者的最大值<code class="language-plaintext highlighter-rouge">max(dp[u-1][j-1], dp[i+1][j])</code>，同时要求扔的最小次数，所以确定在<code class="language-plaintext highlighter-rouge">[1,i]</code>之间的哪一层丢第一颗棋子得到的次数最小，即<code class="language-plaintext highlighter-rouge">min = min(max(dp[u-1][j-1], dp[i+1][j])), u Œ [1,i]</code>。</p></li></ol><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kt">int</span> <span class="nf">solve</span> <span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// write code here</span>
+  <span class="c1">//dp[i][j]表示给定i个楼层，j个棋子，所需要的最大实验次数</span>
+  <span class="kt">int</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+  <span class="c1">//初始化边界：当i == 0时，根本不用试就知道结果，dp[0][j] = 0;</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">)</span>
+    <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="c1">//初始化边界：当k == 1 &amp;&amp; i &gt; 0时，只能一层一层地试，那么dp[i][1] = i</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//状态转移</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+      <span class="c1">//第一个棋子从哪一层开始扔？第u层</span>
+      <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+      <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="o">;</span> <span class="o">++</span><span class="n">u</span><span class="o">){</span>
+        <span class="c1">//在第u层碎了，那么dp[u][k] = dp[u-1][k-1]</span>
+        <span class="c1">//在第u层没碎，那么dp[u][k] = dp[i-u][k]</span>
+        <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">u</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="n">u</span><span class="o">][</span><span class="n">j</span><span class="o">]));</span>
+      <span class="o">}</span>
+      <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">min</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">k</span><span class="o">];</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>空间优化：观察到求最小值只和当前位置的左边元素和上一层元素有关，所以用两个滚动数组实现空间优化。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kt">int</span> <span class="nf">solve</span> <span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// write code here</span>
+  <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>    <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
+  <span class="c1">//dp[i][j]表示给定i个楼层，j个棋子，所需要的最大实验次数</span>
+  <span class="kt">int</span><span class="o">[]</span> <span class="n">preArr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+  <span class="kt">int</span><span class="o">[]</span> <span class="n">curArr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+  <span class="c1">//初始化边界：当k == 1 &amp;&amp; i &gt; 0时，只能一层一层地试，那么dp[i][1] = i</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="n">curArr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//状态转移</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">preArr</span><span class="o">;</span>
+    <span class="n">preArr</span> <span class="o">=</span> <span class="n">curArr</span><span class="o">;</span>
+    <span class="n">curArr</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+      <span class="c1">//第一个棋子从哪一层开始扔？第u层</span>
+      <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+      <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="o">;</span> <span class="o">++</span><span class="n">u</span><span class="o">){</span>
+        <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">preArr</span><span class="o">[</span><span class="n">u</span><span class="o">-</span><span class="mi">1</span><span class="o">],</span> <span class="n">curArr</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="n">u</span><span class="o">]));</span>
+      <span class="o">}</span>
+      <span class="n">curArr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">min</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">curArr</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="nc-108-最大正方形">NC 108 最大正方形</h2><p>给定一个由0和1组成的2维矩阵，返回该矩阵中最大的由1组成的正方形的面积</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://hyc-pic.oss-cn-hangzhou.aliyuncs.com/image-20210425185048632.png" alt="image-20210425185048632" /></p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kt">int</span> <span class="nf">solve</span> <span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// write code here</span>
+  <span class="c1">//最大正方形面积</span>
+  <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+  <span class="c1">//dp[i][j]表示以matrix[i][j]为右下角的最大正方形面积</span>
+  <span class="kt">int</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">m</span><span class="o">][</span><span class="n">n</span><span class="o">];</span>
+  <span class="c1">//初始化边界</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'1'</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+    <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'1'</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="c1">//状态转移</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'0'</span><span class="o">)</span>    <span class="k">continue</span><span class="o">;</span>
+      <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">],</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="n">max</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">max</span><span class="o">,</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">max</span><span class="o">*</span><span class="n">max</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="85-最大矩形">85. 最大矩形</h2><p>给定一个仅包含 <code class="language-plaintext highlighter-rouge">0</code> 和 <code class="language-plaintext highlighter-rouge">1</code> 、大小为 <code class="language-plaintext highlighter-rouge">rows x cols</code> 的二维二进制矩阵，找出只包含 <code class="language-plaintext highlighter-rouge">1</code> 的最大矩形，并返回其面积。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kt">int</span> <span class="nf">maximalRectangle</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+  <span class="k">if</span><span class="o">(</span><span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>  <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+
+  <span class="kt">int</span> <span class="n">maxarea</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="kt">int</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">m</span><span class="o">][</span><span class="n">n</span><span class="o">];</span>
+  <span class="c1">//动态规划：dp[i][j]表示第i行中，第j个元素为结尾的矩阵最大宽度</span>
+  <span class="c1">//我们枚举每一行的每个点的最大宽度，然后向上探索</span>
+  <span class="c1">//实际上就是求以当前点开始，到上边界的最大矩形宽度序列组成的矩形能够得到的最大面积</span>
+  <span class="c1">//例如：</span>
+  <span class="c1">//  ***[***]...</span>
+  <span class="c1">//  ---[***]...</span>
+  <span class="c1">//  --*[***]...</span>
+  <span class="c1">//  --*[***]...</span>
+  <span class="c1">//  ... ...</span>
+  <span class="c1">//括号扩起来的就是最大的面积了</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'1'</span><span class="o">){</span>
+        <span class="c1">//计算以当前点为右下角的矩阵的最大宽度</span>
+        <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">==</span><span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+        <span class="c1">//找到最大的面积，遍历每个宽度，计算面积</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="o">--</span><span class="n">k</span><span class="o">){</span>
+          <span class="n">width</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">width</span><span class="o">,</span> <span class="n">dp</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+          <span class="k">if</span><span class="o">(</span><span class="n">width</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>  <span class="k">break</span><span class="o">;</span>
+          <span class="n">maxarea</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">maxarea</span><span class="o">,</span> <span class="n">width</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="n">maxarea</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="nc-116-把数字翻译成字符串">NC 116 把数字翻译成字符串</h2><p>有一种将字母编码成数字的方式：’a’-&gt;1, ‘b-&gt;2’, … , ‘z-&gt;26’。</p><p>现在给一串数字，返回有多少种可能的译码结果</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 解码
+     * @param nums string字符串 数字串
+     * @return int整型
+     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">solve</span> <span class="o">(</span><span class="nc">String</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// write code here</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="c1">//dp[i]表示从0位置开始，以字符长度为i的子串有几种译码结果</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">!=</span> <span class="sc">'0'</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="c1">//如果当前数字和前一个数字组合小于等于26，那么可以有多一种组合方式，否则只能有一种</span>
+            <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">,</span> <span class="n">i</span><span class="o">));</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">26</span><span class="o">){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">!=</span> <span class="sc">'0'</span><span class="o">)</span>   <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="nc-126-换钱的最少货币数">NC 126 换钱的最少货币数</h2><p>给定数组arr，arr中所有的值都为正整数且不重复。每个值代表一种面值的货币，每种面值的货币可以使用任意张，再给定一个aim，代表要找的钱数，求组成aim的最少货币数。</p><p>如果无解，请返回-1.</p><p>【要求】</p><p>时间复杂度O(n*aim)，空间复杂度On。</p><p>动态规划：</p><ol><li>设<code class="language-plaintext highlighter-rouge">dp[i][j]</code>表示使用<code class="language-plaintext highlighter-rouge">arr[0]~arr[i]</code>的货币来换<code class="language-plaintext highlighter-rouge">j</code>的最少兑换数目</li><li>初始化边界：当<code class="language-plaintext highlighter-rouge">j==0</code>时，都是0，不用换；当<code class="language-plaintext highlighter-rouge">i == 0</code>时，只能用<code class="language-plaintext highlighter-rouge">arr[0]</code>去兑换，<code class="language-plaintext highlighter-rouge">dp[0][j] = dp[0][j-arr[0]]+1</code>，如果<code class="language-plaintext highlighter-rouge">dp[0][j-arr[0]]</code>有效的话。</li><li>状态转移，当<code class="language-plaintext highlighter-rouge">dp[i][j-arr[i]]</code>有效并且<code class="language-plaintext highlighter-rouge">j &gt;= arr[i]</code>的情况下，我们既可以选择当前货币来置换，也可以不选择。</li></ol><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 最少货币数
+     * @param arr int整型一维数组 the array
+     * @param aim int整型 the target
+     * @return int整型
+     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">minMoney</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">aim</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// write code here</span>
+        <span class="c1">//动态规划</span>
+        <span class="c1">//dp[i][j]表示使用面值为arr[0]~arr[i]的货币能够兑换j的最少兑换次数</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">][</span><span class="n">aim</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="c1">//初始化边界</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="no">MAX</span> <span class="o">=</span> <span class="n">aim</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">aim</span> <span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+            <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="no">MAX</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]]</span> <span class="o">!=</span> <span class="no">MAX</span><span class="o">){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">aim</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">!=</span> <span class="no">MAX</span><span class="o">){</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span> <span class="o">-</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">aim</span><span class="o">]</span> <span class="o">==</span> <span class="no">MAX</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">dp</span><span class="o">[</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">aim</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>空间优化，使用滚动数组：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kt">int</span> <span class="nf">minMoney</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">aim</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// write code here</span>
+  <span class="c1">//动态规划</span>
+  <span class="c1">//dp[i][j]表示使用面值为arr[0]~arr[i]的货币能够兑换j的最少兑换次数</span>
+  <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">aim</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+
+  <span class="kt">int</span> <span class="no">MAX</span> <span class="o">=</span> <span class="n">aim</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+  <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">dp</span><span class="o">,</span> <span class="no">MAX</span><span class="o">);</span>
+  <span class="c1">//初始化边界</span>
+  <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">aim</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">){</span>
+        <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">aim</span><span class="o">]</span> <span class="o">==</span> <span class="no">MAX</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">dp</span><span class="o">[</span><span class="n">aim</span><span class="o">];</span>
 <span class="o">}</span>
 </pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/blogging/'>Blogging</a>, <a href='/categories/leetcode/'>leetcode</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="post-tag no-text-decoration" >算法题解</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><!-- Post sharing snippet v2.1 https://github.com/cotes2020/jekyll-theme-chirpy © 2019 Cotes Chung Published under the MIT License --><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Leetcode：动态规划专题整理 - 黄玉才的博客&url=www.yucaihuang.com/posts/leetcode-dp/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Leetcode：动态规划专题整理 - 黄玉才的博客&u=www.yucaihuang.com/posts/leetcode-dp/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=Leetcode：动态规划专题整理 - 黄玉才的博客&url=www.yucaihuang.com/posts/leetcode-dp/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><!-- The Pannel on right side (Desktop views) v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2017-2019 Cotes Chung MIT License --><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"><h3 data-toc-skip>Recent Update</h3><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/web-url-with-chinese-string/">URL包含中文，请求资源404</a></li><li><a href="/posts/web-docker_2/">Docker：入门</a></li><li><a href="/posts/web-docker_1/">Docker：概述</a></li><li><a href="/posts/web-delete-system-python-in-centos/">centOS误删系统自带python</a></li><li><a href="/posts/springboot-starter-id/">创建自定义Springboot starter</a></li></ul></div><div id="access-tags"><h3 data-toc-skip>Trending Tags</h3><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/">算法题解</a> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/java%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">Java源码学习</a> <a class="post-tag" href="/tags/security/">security</a> <a class="post-tag" href="/tags/jvm/">jvm</a> <a class="post-tag" href="/tags/algorithms/">Algorithms</a> <a class="post-tag" href="/tags/web/">web</a> <a class="post-tag" href="/tags/redis/">redis</a> <a class="post-tag" href="/tags/concurrency/">concurrency</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><h3 data-toc-skip class="pl-3 pt-2 mb-2">Contents</h3><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"> <!-- Recommend the other 3 posts according to the tags and categories of the current post, if the number is not enough, use the other latest posts to supplement. v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2019 Cotes Chung Published under the MIT License --><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/leetcode-hard_0/"><div class="card-body"> <!-- Date format snippet v2.4.1 https://github.com/cotes2020/jekyll-theme-chirpy © 2020 Cotes Chung MIT License --> <span class="timeago small" > Sep 16, 2020 <i class="unloaded">2020-09-16T21:14:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>处理大数：剑指 Offer 14- II. 剪绳子 II</h3><div class="text-muted small"><p> 这题做了很久，做不出来，看题解也看了好久，难点在于证明过程，以及如何对大数求余。这题单独列出来，需要多看看，否则下次碰到了还是不会。 题目描述 给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m - 1] 。请问 k[0]k[1]…*k[m - 1] 可能的最大乘积是多少？例如，当绳子...</p></div></div></a></div><div class="card"> <a href="/posts/leetcode-solutions/"><div class="card-body"> <!-- Date format snippet v2.4.1 https://github.com/cotes2020/jekyll-theme-chirpy © 2020 Cotes Chung MIT License --> <span class="timeago small" > Sep 23, 2020 <i class="unloaded">2020-09-23T08:29:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Leetcode题解</h3><div class="text-muted small"><p> 目录 1.两数之和 2.两数相加 4. 寻找两个正序数组的中位数 5.最长回文子串 6. Z 字形变换 7. 整数反转 8. 字符串转换整数 (atoi) 9. 回文数 10. 正则表达式匹配 11.盛最多水的容器 12. 整数转罗马数字 13. 罗马数字转整数 14. 最长公共前缀 15.三数之和 16.最接近三数之和 17.电话号码的字母组合 18.四数...</p></div></div></a></div><div class="card"> <a href="/posts/leetcode-solution_hot_100/"><div class="card-body"> <!-- Date format snippet v2.4.1 https://github.com/cotes2020/jekyll-theme-chirpy © 2020 Cotes Chung MIT License --> <span class="timeago small" > Oct 23, 2020 <i class="unloaded">2020-10-23T13:51:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Leetcode题解:Hot 100!</h3><div class="text-muted small"><p> 目录 1.两数之和 2.两数相加 4. 寻找两个正序数组的中位数 5.最长回文子串 10. 正则表达式匹配 11.盛最多水的容器 15.三数之和 17.电话号码的字母组合 19.删除链表的倒数第N个节点 20.有效的括号 21.合并两个有序链表 22.括号生成 31.下一个排列 32. 最长有效括号 33.搜索旋转排序数组 34.[重要]在排序数组中查找元素的...</p></div></div></a></div></div></div><!-- Navigation buttons at the bottom of the post. v2.1 https://github.com/cotes2020/jekyll-theme-chirpy © 2020 Cotes Chung MIT License --><div class="post-navigation d-flex justify-content-between"> <a href="/posts/dubbo-quick-start/" class="btn btn-outline-primary"><p>Dubbo：简单使用</p></a> <a href="/posts/java-design-mode/" class="btn btn-outline-primary"><p>设计模式</p></a></div></div></div></div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script> <script type="text/javascript"> const imgs = document.querySelectorAll('#post-wrapper img'); const observer = lozad(imgs); observer.observe(); </script> <!-- The Footer v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2017-2019 Cotes Chung MIT License --><footer class="d-flex w-100 justify-content-center"><p class="footer-center"> © 2021 <a href="">Yucai Huang</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span> <br> <a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2020032055号-1</a></p></footer></div><!-- The Search results v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2017-2019 Cotes Chung MIT License --><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-xl-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/">算法题解</a> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/java%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">Java源码学习</a> <a class="post-tag" href="/tags/security/">security</a> <a class="post-tag" href="/tags/jvm/">jvm</a> <a class="post-tag" href="/tags/algorithms/">Algorithms</a> <a class="post-tag" href="/tags/web/">web</a> <a class="post-tag" href="/tags/redis/">redis</a> <a class="post-tag" href="/tags/concurrency/">concurrency</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <!-- The GA snippet v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2017-2019 Cotes Chung MIT License --> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-176388509-1', 'auto'); ga('send', 'pageview'); </script> <script> (function(e,t,n,i,s,a,c){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)} ;a=t.createElement(i);c=t.getElementsByTagName(i)[0];a.async=true;a.src=s ;c.parentNode.insertBefore(a,c) })(window,document,"galite","script","https://cdn.jsdelivr.net/npm/ga-lite@2/dist/ga-lite.min.js"); galite('create', '{"id"=>"UA-176388509-1", "pv"=>{"enabled"=>false, "proxy_url"=>"", "proxy_endpoint"=>"", "cache"=>true}}', 'auto'); galite('send', 'pageview'); </script> <!-- Jekyll Simple Search loader v2.0 https://github.com/cotes2020/jekyll-theme-chirpy © 2017-2019 Cotes Chung MIT License --> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="www.yucaihuang.com{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"><div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>{categories}</div><div><i class="fa fa-tag fa-fw"></i>{tags}</div></div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>' }); </script>
