@@ -1852,6 +1852,60 @@
 
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><p><strong>NC 11 有序数组转化为平衡搜索二叉树</strong></p><p>给出一个升序排序的数组，将其转化为平衡二叉搜索树（BST）.</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 
+     * @param num int整型一维数组 
+     * @return TreeNode类
+     */</span>
+    <span class="kd">public</span> <span class="nc">TreeNode</span> <span class="nf">sortedArrayToBST</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// write code here</span>
+        <span class="c1">//我们可以把这有序数组看成二叉搜索树的中序遍历</span>
+        <span class="c1">//如何将其转换为平衡的呢？</span>
+        <span class="c1">//只要取中间节点为根，左右两边递归构建子树，那就肯定是平衡的二叉搜索树了</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">num</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">return</span> <span class="nf">arrToBST</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">num</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="nc">TreeNode</span> <span class="nf">arrToBST</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">h</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">&gt;</span> <span class="n">h</span><span class="o">)</span>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">h</span><span class="o">)</span>    <span class="k">return</span> <span class="k">new</span> <span class="nc">TreeNode</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">l</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">h</span> <span class="o">-</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="nc">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeNode</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]);</span>
+        
+        <span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">arrToBST</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">arrToBST</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">h</span><span class="o">);</span>
+        
+        <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><h2 id="二叉树的镜像">二叉树的镜像*</h2><p><strong>剑指 Offer 27. 二叉树的镜像</strong></p><p>请完成一个函数，输入一个二叉树，该函数输出它的镜像。</p><p><strong>101.对称二叉树</strong></p><p>给定一个二叉树，检查它是否是镜像对称的。</p><p>第一题有两种做法，一种是直接修改原树，一种是新建节点，在写之前问清楚用哪种方式。</p><p>思路很简单：递归地交换左右子树</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
