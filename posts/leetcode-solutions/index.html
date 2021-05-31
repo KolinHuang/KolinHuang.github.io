@@ -2456,6 +2456,72 @@
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="29-两数相除">29. 两数相除</h2><p>给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。</p><p>返回被除数 dividend 除以除数 divisor 得到的商。</p><p>整数除法的结果应当截去（truncate）其小数部分，例如：truncate(8.345) = 8 以及 truncate(-2.7335) = -2</p><p>提示：</p><ul><li>被除数和除数均为 32 位有符号整数。</li><li>除数不为 0。</li><li>假设我们的环境只能存储 32 位有符号整数，其数值范围是 [−2^31, 2^31 − 1]。本题中，如果除法结果溢出，则返回 231 − 1。</li></ul><p>思路：递归，60/8 = (60-32)/8 + 4 = (60-32-16)/8 + 2 + 4 = 1 + 2 + 4 = 7</p><p>将dividend和divisor都转化为负数计算，因为-(1«31)转为正数会溢出，(1 « 31)转为负数不会溢出</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">divide</span><span class="o">(</span><span class="kt">int</span> <span class="n">dividend</span><span class="o">,</span> <span class="kt">int</span> <span class="n">divisor</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//除数和被除数都是32位有符号整数，那怎么可能会溢出呢？难道是-2^31 / -1</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">dividend</span> <span class="o">==</span> <span class="o">-(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">divisor</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="o">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">dividend</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>   <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//用加法逼近</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">divisor</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>    <span class="k">return</span> <span class="n">dividend</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">divisor</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span>   <span class="k">return</span> <span class="o">-</span><span class="n">dividend</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">((</span><span class="n">dividend</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">divisor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">dividend</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">divisor</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)){</span>
+            <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="n">dividend</span> <span class="o">=</span> <span class="n">dividend</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="n">dividend</span> <span class="o">:</span> <span class="n">dividend</span><span class="o">;</span>
+        <span class="n">divisor</span> <span class="o">=</span> <span class="n">divisor</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="n">divisor</span> <span class="o">:</span> <span class="n">divisor</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">div</span><span class="o">(</span><span class="n">dividend</span><span class="o">,</span> <span class="n">divisor</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">sign</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">res</span> <span class="o">:</span> <span class="o">-</span><span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">int</span> <span class="nf">div</span><span class="o">(</span><span class="kt">long</span> <span class="n">a</span><span class="o">,</span> <span class="kt">long</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">)</span>   <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">tmp</span> <span class="o">+</span> <span class="n">tmp</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">a</span><span class="o">){</span>
+            <span class="n">tmp</span> <span class="o">+=</span> <span class="n">tmp</span><span class="o">;</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="n">cnt</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">cnt</span> <span class="o">+</span> <span class="n">div</span><span class="o">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">tmp</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump31"></span></p><h2 id="31下一个排列">31.下一个排列</h2><p>实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。</p><p>如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。</p><p>必须原地修改，只允许使用额外常数空间。</p><p>以下是一些例子，输入位于左侧列，其相应输出位于右侧列。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -17046,6 +17112,20 @@ root[1] = rob(root.left)[0] + rob(root.right)[0] + root.val;
             <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">ni</span><span class="o">.</span><span class="na">getList</span><span class="o">().</span><span class="na">iterator</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="342-4的幂">342. 4的幂</h2><p>给定一个整数，写一个函数来判断它是否是 4 的幂次方。如果是，返回 true ；否则，返回 false 。</p><p>整数 n 是 4 的幂次方需满足：存在整数 x 使得 n == 4^x</p><p>4的幂次方，二进制形式只有1个1，并且这个1处于从低位0开始的偶数位上。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isPowerOfFour</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//n如果是2的幂次方，那肯定是4的幂次方</span>
+        <span class="c1">//那么只需要再判断出是2的幂次方基础上，判断其为4的幂次就行了</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">n</span> <span class="o">&amp;</span> <span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">n</span> <span class="o">&amp;</span> <span class="mh">0xaaaaaaaa</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump344"></span></p><h2 id="344反转字符串">344.反转字符串</h2><p>编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。</p><p>不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题。</p><p>你可以假设数组中的所有字符都是 ASCII 码表中的可打印字符。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1

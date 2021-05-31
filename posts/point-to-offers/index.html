@@ -5095,57 +5095,31 @@ high = high ^ n &amp; ~low
 27
 28
 29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">int</span><span class="o">[][]</span> <span class="nf">findContinuousSequence</span><span class="o">(</span><span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">0</span><span class="o">][];</span>
-        <span class="nc">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">[]&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
-        <span class="c1">//滑动窗口</span>
-        <span class="k">while</span><span class="o">(</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="o">){</span>
-            <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
-                <span class="n">sum</span> <span class="o">+=</span> <span class="n">i</span><span class="o">;</span>
-            <span class="o">}</span>
-            <span class="c1">//值还不够，就在右边扩大窗口</span>
-            <span class="k">while</span><span class="o">(</span><span class="n">sum</span> <span class="o">&lt;</span> <span class="n">target</span><span class="o">){</span>
-                <span class="n">high</span><span class="o">++;</span>
-                <span class="n">sum</span> <span class="o">+=</span> <span class="n">high</span><span class="o">;</span>
-            <span class="o">}</span>
-            <span class="c1">//值太大了，就在在左边缩小窗口</span>
-            <span class="k">while</span><span class="o">(</span><span class="n">sum</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">){</span>
-                <span class="n">sum</span><span class="o">-=</span><span class="n">low</span><span class="o">;</span>
-                <span class="n">low</span><span class="o">++;</span>
-            <span class="o">}</span>
-            <span class="c1">//必须有2个数，那么low &lt; high</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">==</span> <span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">){</span>
-                <span class="kt">int</span><span class="o">[]</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">high</span><span class="o">-</span><span class="n">low</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
-                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span><span class="o">,</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">-</span><span class="n">low</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
-                    <span class="n">tmp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">++;</span>
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="nc">FindContinuousSequence</span><span class="o">(</span><span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">)</span>    <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+        <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="o">(</span><span class="n">target</span><span class="o">/</span><span class="mi">2</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="o">++</span><span class="n">r</span><span class="o">;</span>
+            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
+            <span class="n">sum</span> <span class="o">+=</span> <span class="n">r</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">==</span> <span class="n">target</span><span class="o">){</span>
+                <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">list</span><span class="o">));</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">){</span>
+                <span class="k">while</span><span class="o">(</span><span class="n">sum</span> <span class="o">&gt;</span> <span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+                    <span class="n">sum</span> <span class="o">-=</span> <span class="n">l</span><span class="o">;</span>
+                    <span class="n">l</span><span class="o">++;</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
                 <span class="o">}</span>
-                <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
-              	<span class="c1">//找到一个满足要求的起始位置i，那么i+1处开始的序列肯定不行，所以要跳过</span>
-              	<span class="n">low</span><span class="o">++;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">==</span> <span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;=</span><span class="mi">2</span><span class="o">){</span>
+                    <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">list</span><span class="o">));</span>
+                <span class="o">}</span>
             <span class="o">}</span>
-            <span class="n">low</span><span class="o">++;</span>
-        <span class="o">}</span>
-        <span class="c1">//这玩意儿还能这么定义，我才知道...这不就是用矩阵实现邻接表吗？？？太秀了</span>
-        <span class="kt">int</span><span class="o">[][]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()][];</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">res</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
     <span class="o">}</span>
