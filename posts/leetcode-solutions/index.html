@@ -8220,6 +8220,48 @@ c<span class="p">[</span><span class="nv">i</span><span class="p">][</span><span
     <span class="o">}</span>
   <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="91-解码方法">91. 解码方法</h2><p>一条包含字母 A-Z 的消息通过以下映射进行了 编码 ：</p><p>‘A’ -&gt; 1 ‘B’ -&gt; 2 … ‘Z’ -&gt; 26 要 解码 已编码的消息，所有数字必须基于上述映射的方法，反向映射回字母（可能有多种方法）。例如，”11106” 可以映射为：</p><p>“AAJF” ，将消息分组为 (1 1 10 6) “KJF” ，将消息分组为 (11 10 6) 注意，消息不能分组为 (1 11 06) ，因为 “06” 不能映射为 “F” ，这是由于 “6” 和 “06” 在映射中并不等价。</p><p>给你一个只含数字的 非空 字符串 s ，请计算并返回 解码 方法的 总数 。</p><p>题目数据保证答案肯定是一个 32 位 的整数。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numDecodings</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'0'</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="c1">//动态规划，dp[i]表示以第i个元素为结尾的字符串有多少种解码方案</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+      <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">!=</span> <span class="sc">'0'</span><span class="o">){</span>
+        <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+      <span class="o">}</span>
+      <span class="c1">//只有当上一个字符不为0，而且两个字符组合的大小小于等于26，才能多一种编码方式</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">)</span> <span class="o">!=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="o">((</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">)</span> <span class="o">-</span> <span class="sc">'0'</span><span class="o">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="o">(</span><span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="o">))</span> <span class="o">&lt;=</span> <span class="mi">26</span><span class="o">){</span>
+        <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">];</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+  <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump92"></span></p><h2 id="92-反转链表-ii">92. 反转链表 II</h2><p>反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。</p><p>说明: 1 ≤ m ≤ n ≤ 链表长度。</p><p>示例:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre><span class="nl">输入:</span> <span class="mi">1</span><span class="o">-&gt;</span><span class="mi">2</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-&gt;</span><span class="mi">4</span><span class="o">-&gt;</span><span class="mi">5</span><span class="o">-&gt;</span><span class="no">NULL</span><span class="o">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
