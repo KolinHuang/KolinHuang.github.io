@@ -17128,6 +17128,40 @@ n = 101101111
         <span class="k">return</span> <span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">index1</span><span class="o">)</span> <span class="o">-</span> <span class="o">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">index2</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="322-零钱兑换">322. 零钱兑换</h2><p>给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。</p><p>你可以认为每种硬币的数量是无限的。</p><p>动态规划，我们设定dp[i]表示coins能组成总金额i的最少硬币数。</p><p>遍历coins，那么当<code class="language-plaintext highlighter-rouge">coins[j] &lt;= i</code>时，这个<code class="language-plaintext highlighter-rouge">coins[j]</code>是可以选择放入背包的，那么只需求当前的硬币数和放入这个coin的硬币数哪个大就行了。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">coinChange</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">coins</span><span class="o">,</span> <span class="kt">int</span> <span class="n">amount</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//令dp[i]表示coins凑成总金额i的最少硬币数</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">amount</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">dp</span><span class="o">,</span> <span class="n">amount</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//遍历所有的总金额</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">amount</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">coins</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">coins</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="o">){</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">coins</span><span class="o">[</span><span class="n">j</span><span class="o">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">amount</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">amount</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">dp</span><span class="o">[</span><span class="n">amount</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump327"></span></p><h2 id="327区间和的个数tag">327.区间和的个数[tag]</h2><p>给定一个整数数组 nums，返回区间和在 [lower, upper] 之间的个数，包含 lower 和 upper。 区间和 S(i, j) 表示在 nums 中，位置从 i 到 j 的元素之和，包含 i 和 j (i ≤ j)。</p><p>说明: 最直观的算法复杂度是 O(n2) ，请在此基础上优化你的算法。</p><p>示例:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -22660,6 +22694,46 @@ k = 8,
 
     
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="518-零钱兑换-ii">518. 零钱兑换 II</h2><p>给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。</p><p>这是一个背包问题，但是要计算组合数。</p><p>根据背包问题的思路，我们是需要判断每个硬币是否需要被放入背包的。</p><ul><li>如果放入后不超过容量，那就可以放入</li><li>如果放入后超过了容量，那就不允许放入</li></ul><p>动态规划，设dp[i]表示coin数组能凑出总金额i的组合数。</p><p>状态转移：</p><ul><li>对于每个coin，都可以选择放入或者不放入</li><li>如果存在总金额i - coin的组合，那么把当前coin放入背包后，组合数应当为dp[i-coin]</li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">change</span><span class="o">(</span><span class="kt">int</span> <span class="n">amount</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">coins</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//dp[i]表示用coin能够组成总金额i的最大组合数</span>
+        <span class="cm">/**
+        状态转移：
+        dp[i] = dp[i - coin]
+         */</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">amount</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">coin</span> <span class="o">:</span> <span class="n">coins</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">coin</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">amount</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">coin</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">amount</span><span class="o">];</span>
+    <span class="o">}</span>
+    
+<span class="o">}</span>
 </pre></table></code></div></div><h2 id="525-连续数组">525. 连续数组</h2><p>给定一个二进制数组 <code class="language-plaintext highlighter-rouge">nums</code> , 找到含有相同数量的 <code class="language-plaintext highlighter-rouge">0</code> 和 <code class="language-plaintext highlighter-rouge">1</code> 的最长连续子数组，并返回该子数组的长度。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -27486,6 +27560,40 @@ B: [3,2,1,4,7]
             <span class="n">index</span> <span class="o">=</span> <span class="n">cur</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">max</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="852-山脉数组的峰顶索引">852. 山脉数组的峰顶索引</h2><p>符合下列属性的数组 arr 称为 山脉数组 ： arr.length &gt;= 3 存在 i（0 &lt; i &lt; arr.length - 1）使得： arr[0] &lt; arr[1] &lt; … arr[i-1] &lt; arr[i] arr[i] &gt; arr[i+1] &gt; … &gt; arr[arr.length - 1] 给你由整数组成的山脉数组 arr ，返回任何满足 arr[0] &lt; arr[1] &lt; … arr[i - 1] &lt; arr[i] &gt; arr[i + 1] &gt; … &gt; arr[arr.length - 1] 的下标 i 。</p><p>二分法找山顶：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">peakIndexInMountainArray</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//二分法</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span> <span class="o">-</span> <span class="n">l</span><span class="o">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump860"></span></p><h2 id="860-柠檬水找零">860. 柠檬水找零</h2><p>在柠檬水摊上，每一杯柠檬水的售价为 5 美元。</p><p>顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。</p><p>每位顾客只买一杯柠檬水，然后向你付 5 美元、10 美元或 20 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 5 美元。</p><p>注意，一开始你手头没有任何零钱。</p><p>如果你能给每位顾客正确找零，返回 true ，否则返回 false 。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
