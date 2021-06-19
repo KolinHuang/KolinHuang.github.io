@@ -30518,6 +30518,86 @@ B: [3,2,1,4,7]
         <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="1239-串联字符串的最大长度">1239. 串联字符串的最大长度</h2><p>给定一个字符串数组 arr，字符串 s 是将 arr 某一子序列字符串连接所得的字符串，如果 s 中的每一个字符都只出现过一次，那么它就是一个可行解。</p><p>请返回所有可行解 s 中最长长度。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">arr</span> <span class="o">=</span> <span class="o">[</span><span class="s">"un"</span><span class="o">,</span><span class="s">"iq"</span><span class="o">,</span><span class="s">"ue"</span><span class="o">]</span>
+<span class="n">输出</span><span class="err">：</span><span class="mi">4</span>
+<span class="n">解释</span><span class="err">：</span><span class="n">所有可能的串联组合是</span> <span class="s">""</span><span class="o">,</span><span class="s">"un"</span><span class="o">,</span><span class="s">"iq"</span><span class="o">,</span><span class="s">"ue"</span><span class="o">,</span><span class="s">"uniq"</span> <span class="n">和</span> <span class="s">"ique"</span><span class="err">，</span><span class="n">最大长度为</span> <span class="mi">4</span><span class="err">。</span>
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">maxLength</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">bitmap</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="nc">String</span> <span class="n">str</span> <span class="o">:</span> <span class="n">arr</span><span class="o">){</span>
+            <span class="c1">//首先过滤哪些有重复字母的字符串</span>
+            <span class="c1">//然后将字符串用位图表示</span>
+            <span class="kt">int</span> <span class="n">bit</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+                <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-</span> <span class="sc">'a'</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">((</span><span class="n">bit</span> <span class="o">&amp;</span> <span class="o">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span><span class="o">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="n">bit</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">bit</span> <span class="o">|=</span> <span class="o">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">bit</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="n">bitmap</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">bit</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//深搜</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">bitmap</span><span class="o">,</span> <span class="kt">int</span> <span class="n">cur</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mask</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cur</span> <span class="o">==</span> <span class="n">bitmap</span><span class="o">.</span><span class="na">size</span><span class="o">()){</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">bitCount</span><span class="o">(</span><span class="n">mask</span><span class="o">));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">//对于当前的bit，可选可不选，如果与mask没冲突，那么可选</span>
+        <span class="k">if</span><span class="o">((</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="n">bitmap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">cur</span><span class="o">))</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">dfs</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="n">cur</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">mask</span> <span class="o">|</span> <span class="n">bitmap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">cur</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="n">cur</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">mask</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump1319"></span></p><h2 id="1319-连通网络的操作次数">1319. 连通网络的操作次数</h2><p>用以太网线缆将 n 台计算机连接成一个网络，计算机的编号从 0 到 n-1。线缆用 connections 表示，其中 connections[i] = [a, b] 连接了计算机 a 和 b。</p><p>网络中的任何一台计算机都可以通过网络直接或者间接访问同一个网络中其他任意一台计算机。</p><p>给你这个计算机网络的初始布线 connections，你可以拔开任意两台直连计算机之间的线缆，并用它连接一对未直连的计算机。请你计算并返回使所有计算机都连通所需的最少操作次数。如果不可能，则返回 -1 。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
