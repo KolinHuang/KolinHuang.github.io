@@ -102,7 +102,7 @@
         <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</pre></table></code></div></div><h2 id="5802-统计好数字的数目">5802. 统计好数字的数目</h2><p>我们称一个数字字符串是 好数字 当它满足（下标从 0 开始）偶数 下标处的数字为 偶数 且 奇数 下标处的数字为 质数 （2，3，5 或 7）。</p><p>比方说，”2582” 是好数字，因为偶数下标处的数字（2 和 8）是偶数且奇数下标处的数字（5 和 2）为质数。但 “3245” 不是 好数字，因为 3 在偶数下标处但不是偶数。 给你一个整数 n ，请你返回长度为 n 且为好数字的数字字符串 总数 。由于答案可能会很大，请你将它对 109 + 7 取余后返回 。</p><p>一个 数字字符串 是每一位都由 0 到 9 组成的字符串，且可能包含前导 0 。</p><p>可以想象是在填空，在偶数位我们有5种方式填（0,2,4,6,8），在奇数位我们有4种方式填(2,3,5,7)。</p><p>那么对于相邻的一对空格，我们有4 * 5=25种填法。</p><ul><li>如果n是偶数，那么就是20^(n/2)</li><li>如果n是奇数，最后还需要乘5，表示多一个偶数位空格。</li></ul><p>数字很大，所以需要快速幂计算，并且需要在计算过程中随时取模。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><h2 id="5802-统计好数字的数目">5802. 统计好数字的数目</h2><p>我们称一个数字字符串是 好数字 当它满足（下标从 0 开始）偶数 下标处的数字为 偶数 且 奇数 下标处的数字为 质数 （2，3，5 或 7）。</p><p>比方说，”2582” 是好数字，因为偶数下标处的数字（2 和 8）是偶数且奇数下标处的数字（5 和 2）为质数。但 “3245” 不是 好数字，因为 3 在偶数下标处但不是偶数。 给你一个整数 n ，请你返回长度为 n 且为好数字的数字字符串 总数 。由于答案可能会很大，请你将它对 109 + 7 取余后返回 。</p><p>一个 数字字符串 是每一位都由 0 到 9 组成的字符串，且可能包含前导 0 。</p><p>可以想象是在填空，在偶数位我们有5种方式填（0,2,4,6,8），在奇数位我们有4种方式填(2,3,5,7)。</p><p>那么对于相邻的一对空格，我们有4 * 5=20种填法。</p><ul><li>如果n是偶数，那么就是20^(n/2)</li><li>如果n是奇数，最后还需要乘5，表示多一个偶数位空格。</li></ul><p>数字很大，所以需要快速幂计算，并且需要在计算过程中随时取模。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -130,25 +130,6 @@
 26
 27
 28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
 </pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">1000000007</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">countGoodNumbers</span><span class="o">(</span><span class="kt">long</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
@@ -177,21 +158,12 @@
         <span class="k">return</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">res</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
-
-<span class="err">##</span> <span class="mi">5803</span><span class="o">.</span> <span class="n">最长公共子路径</span>
-
-<span class="n">一个国家由</span> <span class="n">n</span> <span class="n">个编号为</span> <span class="mi">0</span> <span class="n">到</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span> <span class="n">的城市组成</span><span class="err">。</span><span class="n">在这个国家里</span><span class="err">，</span><span class="n">每两个</span> <span class="n">城市之间都有一条道路连接</span><span class="err">。</span>
-
-<span class="n">总共有</span> <span class="n">m</span> <span class="n">个编号为</span> <span class="mi">0</span> <span class="n">到</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span> <span class="n">的朋友想在这个国家旅游</span><span class="err">。</span><span class="n">他们每一个人的路径都会包含一些城市</span><span class="err">。</span><span class="n">每条路径都由一个整数数组表示</span><span class="err">，</span><span class="n">每个整数数组表示一个朋友按顺序访问过的城市序列</span><span class="err">。</span><span class="n">同一个城市在一条路径中可能</span> <span class="n">重复</span> <span class="n">出现</span><span class="err">，</span><span class="n">但同一个城市在一条路径中不会连续出现</span><span class="err">。</span>
-
-<span class="n">给你一个整数</span> <span class="n">n</span> <span class="n">和二维数组</span> <span class="n">paths</span> <span class="err">，</span><span class="n">其中</span> <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="n">是一个整数数组</span><span class="err">，</span><span class="n">表示第</span> <span class="n">i</span> <span class="n">个朋友走过的路径</span><span class="err">，</span><span class="n">请你返回</span> <span class="n">每一个</span> <span class="n">朋友都走过的</span> <span class="n">最长公共子路径</span> <span class="n">的长度</span><span class="err">，</span><span class="n">如果不存在公共子路径</span><span class="err">，</span><span class="n">请你返回</span> <span class="mi">0</span> <span class="err">。</span>
-
-<span class="n">一个</span> <span class="n">子路径</span> <span class="n">指的是一条路径中连续的城市序列</span><span class="err">。</span>
-
-<span class="n">示例</span> <span class="mi">1</span><span class="err">：</span>
-
-<span class="err">```</span><span class="n">java</span>
-<span class="n">输入</span><span class="err">：</span><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span><span class="o">,</span> <span class="n">paths</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">],</span>
+</pre></table></code></div></div><p>​</p><h2 id="5803-最长公共子路径">5803. 最长公共子路径</h2><p>一个国家由 n 个编号为 0 到 n - 1 的城市组成。在这个国家里，每两个 城市之间都有一条道路连接。</p><p>总共有 m 个编号为 0 到 m - 1 的朋友想在这个国家旅游。他们每一个人的路径都会包含一些城市。每条路径都由一个整数数组表示，每个整数数组表示一个朋友按顺序访问过的城市序列。同一个城市在一条路径中可能 重复 出现，但同一个城市在一条路径中不会连续出现。</p><p>给你一个整数 n 和二维数组 paths ，其中 paths[i] 是一个整数数组，表示第 i 个朋友走过的路径，请你返回 每一个 朋友都走过的 最长公共子路径 的长度，如果不存在公共子路径，请你返回 0 。</p><p>一个 子路径 指的是一条路径中连续的城市序列。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span><span class="o">,</span> <span class="n">paths</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">],</span>
                      <span class="o">[</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">],</span>
                      <span class="o">[</span><span class="mi">4</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">]]</span>
 <span class="n">输出</span><span class="err">：</span><span class="mi">2</span>
