@@ -26412,6 +26412,236 @@ B: [3,2,1,4,7]
     <span class="o">}</span>
 
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="726-原子的数量">726. 原子的数量</h2><p>给定一个化学式formula（作为字符串），返回每种原子的数量。</p><p>原子总是以一个大写字母开始，接着跟随0个或任意个小写字母，表示原子的名字。</p><p>如果数量大于 1，原子后会跟着数字表示原子的数量。如果数量等于 1 则不会跟数字。例如，H2O 和 H2O2 是可行的，但 H1O2 这个表达是不可行的。</p><p>两个化学式连在一起是新的化学式。例如 H2O2He3Mg4 也是化学式。</p><p>一个括号中的化学式和数字（可选择性添加）也是化学式。例如 (H2O2) 和 (H2O2)3 是化学式。</p><p>给定一个化学式，输出所有原子的数量。格式为：第一个（按字典序）原子的名子，跟着它的数量（如果数量大于 1），然后是第二个原子的名字（按字典序），跟着它的数量（如果数量大于 1），以此类推。</p><p>示例 :</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="nl">输入:</span> 
+<span class="n">formula</span> <span class="o">=</span> <span class="s">"K4(ON(SO3)2)2"</span>
+<span class="nl">输出:</span> <span class="s">"K4N2O14S4"</span>
+<span class="nl">解释:</span> 
+<span class="n">原子的数量是</span> <span class="o">{</span><span class="sc">'K'</span><span class="o">:</span> <span class="mi">4</span><span class="o">,</span> <span class="sc">'N'</span><span class="o">:</span> <span class="mi">2</span><span class="o">,</span> <span class="sc">'O'</span><span class="o">:</span> <span class="mi">14</span><span class="o">,</span> <span class="sc">'S'</span><span class="o">:</span> <span class="mi">4</span><span class="o">}</span><span class="err">。</span>
+<span class="nl">注意:</span>
+
+<span class="n">所有原子的第一个字母为大写</span><span class="err">，</span><span class="n">剩余字母都是小写</span><span class="err">。</span>
+<span class="n">formula的长度在</span><span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1000</span><span class="o">]</span><span class="n">之间</span><span class="err">。</span>
+<span class="n">formula只包含字母</span><span class="err">、</span><span class="n">数字和圆括号</span><span class="err">，</span><span class="n">并且题目中给定的是合法的化学式</span><span class="err">。</span>
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">String</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Main</span><span class="o">().</span><span class="na">countOfAtoms</span><span class="o">(</span><span class="s">"(H)"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">res</span><span class="o">);</span>
+
+    <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">countOfAtoms</span><span class="o">(</span><span class="nc">String</span> <span class="n">formula</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//每一层完整括号用一个哈希表存</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">formula</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="c1">//最外层的哈希表</span>
+        <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="c1">//用一个列表存内层哈希表，列表最尾端的哈希表是当前最内部（最内括号）的哈希表</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;&gt;</span> <span class="n">mList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'('</span><span class="o">){</span>
+                <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">"("</span><span class="o">);</span>
+                <span class="n">mList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;());</span>
+                <span class="n">idx</span><span class="o">++;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">)</span> <span class="o">==</span> <span class="sc">')'</span><span class="o">){</span>
+                <span class="n">idx</span><span class="o">++;</span>
+                <span class="kt">int</span> <span class="n">times</span> <span class="o">=</span> <span class="n">scanInteger</span><span class="o">(</span><span class="n">formula</span><span class="o">);</span>
+                <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">mList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">help</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Stack</span><span class="o">&lt;&gt;();</span>
+                <span class="c1">//拆括号，执行乘法</span>
+                <span class="k">while</span><span class="o">(!</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">stack</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">"("</span><span class="o">)){</span>
+                    <span class="nc">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">times</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>   <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">str</span><span class="o">,</span> <span class="n">tmp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">str</span><span class="o">)</span> <span class="o">*</span> <span class="n">times</span><span class="o">);</span>
+                    <span class="n">help</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="c1">//左括号出栈</span>
+                <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="c1">//移除这一层的哈希表</span>
+                <span class="n">mList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">pre</span> <span class="o">=</span> <span class="n">map</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="n">pre</span> <span class="o">=</span> <span class="n">mList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="c1">//将这一层哈希表合并到上一层</span>
+                <span class="k">while</span><span class="o">(!</span><span class="n">help</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="nc">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">help</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">pre</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">s</span><span class="o">))</span>
+                        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">tmp</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">pre</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">pre</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="n">tmp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">));</span>
+                <span class="o">}</span>
+
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">map</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">mList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">mList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="c1">//找原子</span>
+                <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">scanItem</span><span class="o">(</span><span class="n">formula</span><span class="o">);</span>
+                <span class="c1">//找次数</span>
+                <span class="kt">int</span> <span class="n">times</span> <span class="o">=</span> <span class="n">scanInteger</span><span class="o">(</span><span class="n">formula</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">times</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>  <span class="n">times</span><span class="o">++;</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">)){</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">tmp</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="n">times</span><span class="o">);</span>
+
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">map</span><span class="o">.</span><span class="na">keySet</span><span class="o">());</span>
+        <span class="c1">//字典序</span>
+        <span class="nc">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+        <span class="nc">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="s">""</span> <span class="o">:</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">scanInteger</span><span class="o">(</span><span class="nc">String</span> <span class="n">formula</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">formula</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">||</span> <span class="o">!</span><span class="nc">Character</span><span class="o">.</span><span class="na">isDigit</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">)))</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="nc">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">();</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">));</span>
+        <span class="n">idx</span><span class="o">++;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">formula</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="nc">Character</span><span class="o">.</span><span class="na">isDigit</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">))){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">));</span>
+            <span class="n">idx</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">scanItem</span><span class="o">(</span><span class="nc">String</span> <span class="n">formula</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">formula</span><span class="o">.</span><span class="na">length</span><span class="o">())</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="nc">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">();</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">));</span>
+        <span class="n">idx</span><span class="o">++;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">formula</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="nc">Character</span><span class="o">.</span><span class="na">isLetter</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="nc">Character</span><span class="o">.</span><span class="na">isLowerCase</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">))){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">formula</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">idx</span><span class="o">));</span>
+            <span class="n">idx</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+
+
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump733"></span></p><h2 id="733-图像渲染">733. 图像渲染</h2><p>有一幅以二维整数数组表示的图画，每一个整数表示该图画的像素值大小，数值在 0 到 65535 之间。</p><p>给你一个坐标 (sr, sc) 表示图像渲染开始的像素值（行 ，列）和一个新的颜色值 newColor，让你重新上色这幅图像。</p><p>为了完成上色工作，从初始坐标开始，记录初始坐标的上下左右四个方向上像素值与初始坐标相同的相连像素点，接着再记录这四个方向上符合条件的像素点与他们对应四个方向上像素值与初始坐标相同的相连像素点，……，重复该过程。将所有有记录的像素点的颜色值改为新的颜色值。</p><p>最后返回经过上色渲染后的图像。</p><p>示例 1:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
