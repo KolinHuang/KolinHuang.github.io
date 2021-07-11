@@ -13160,6 +13160,52 @@ class Node {
         
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="162-寻找峰值">162. 寻找峰值</h2><p>峰值元素是指其值大于左右相邻值的元素。</p><p>给你一个输入数组 nums，找到峰值元素并返回其索引。数组可能包含多个峰值，在这种情况下，返回 任何一个峰值 所在位置即可。</p><p>你可以假设 nums[-1] = nums[n] = -∞ 。</p><p><strong>示例 1：</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre>输入：nums = [1,2,3,1]
+输出：2
+解释：3 是峰值元素，你的函数应该返回其索引 2。
+</pre></table></code></div></div><p>提示：</p><ul><li>1 &lt;= nums.length &lt;= 1000</li><li>-2^31 &lt;= nums[i] &lt;= 2^31 - 1</li><li>对于所有有效的 i 都有 nums[i] != nums[i + 1]</li></ul><p>进阶：你可以实现时间复杂度为 O(logN) 的解决方案吗？</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findPeakElement</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//分治查找峰值</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">//肯定存在峰值，如果遇到了递减序列，那么有峰值在左侧；反之在右侧</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+            <span class="c1">//向下取整，mid+1肯定不会溢出</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">l</span> <span class="o">+</span> <span class="n">r</span><span class="o">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">l</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+<span class="o">}</span>
+
 </pre></table></code></div></div><p><span id="jump164"></span></p><h2 id="164最大间距">164.最大间距</h2><p>给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。</p><p>如果数组元素个数小于 2，则返回 0。</p><p>示例 1:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -13254,7 +13300,91 @@ class Node {
         <span class="k">return</span> <span class="n">max</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</pre></table></code></div></div><p>因此，我们可以选取整数 \(d = \lfloor (\textit{max}-\textit{min}) / (N-1) \rfloor &lt; \lceil (\textit{max}-\textit{min}) / (N-1)\) 。随后，我们将整个区间划分为若干个大小为 dd 的桶，并找出每个整数所在的桶。根据前面的结论，能够知道，元素之间的最大间距一定不会出现在某个桶的内部，而一定会出现在不同桶当中。</p><p>因此，在找出每个元素所在的桶之后，我们可以维护每个桶内元素的最大值与最小值。随后，只需从前到后不断比较相邻的桶，用后一个桶的最小值与前一个桶的最大值之差作为两个桶的间距，最终就能得到所求的答案。</p><h2 id="168-excel表列名称">168. Excel表列名称</h2><p>给定一个正整数，返回它在 Excel 表中相对应的列名称。</p><p>例如，</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>因此，我们可以选取整数 \(d = \lfloor (\textit{max}-\textit{min}) / (N-1) \rfloor &lt; \lceil (\textit{max}-\textit{min}) / (N-1)\) 。随后，我们将整个区间划分为若干个大小为 dd 的桶，并找出每个整数所在的桶。根据前面的结论，能够知道，元素之间的最大间距一定不会出现在某个桶的内部，而一定会出现在不同桶当中。</p><p>因此，在找出每个元素所在的桶之后，我们可以维护每个桶内元素的最大值与最小值。随后，只需从前到后不断比较相邻的桶，用后一个桶的最小值与前一个桶的最大值之差作为两个桶的间距，最终就能得到所求的答案。</p><h2 id="165-比较版本号">165. 比较版本号</h2><p>给你两个版本号 version1 和 version2 ，请你比较它们。</p><p>版本号由一个或多个修订号组成，各修订号由一个 ‘.’ 连接。每个修订号由 多位数字 组成，可能包含 前导零 。每个版本号至少包含一个字符。修订号从左到右编号，下标从 0 开始，最左边的修订号下标为 0 ，下一个修订号下标为 1 ，以此类推。例如，2.5.33 和 0.1 都是有效的版本号。</p><p>比较版本号时，请按从左到右的顺序依次比较它们的修订号。比较修订号时，只需比较 忽略任何前导零后的整数值 。也就是说，修订号 1 和修订号 001 相等 。如果版本号没有指定某个下标处的修订号，则该修订号视为 0 。例如，版本 1.0 小于版本 1.1 ，因为它们下标为 0 的修订号相同，而下标为 1 的修订号分别为 0 和 1 ，0 &lt; 1 。</p><p>返回规则如下：</p><ul><li>如果 version1 &gt; version2 返回 1，</li><li>如果 version1 &lt; version2 返回 -1，</li><li>除此之外返回 0。</li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareVersion</span><span class="o">(</span><span class="nc">String</span> <span class="n">version1</span><span class="o">,</span> <span class="nc">String</span> <span class="n">version2</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//忽略任何前导零后的整数值</span>
+        <span class="c1">//如果版本号没有指定某个下标处的修订号，则该修订号视为 0</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">arr1</span> <span class="o">=</span> <span class="n">version1</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">"\\."</span><span class="o">);</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">arr2</span> <span class="o">=</span> <span class="n">version2</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">"\\."</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">ptr1</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">ptr2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//修订号</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">ptr1</span> <span class="o">&lt;</span> <span class="n">arr1</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">ptr2</span> <span class="o">&lt;</span> <span class="n">arr2</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">m1</span> <span class="o">=</span> <span class="n">ptr1</span> <span class="o">&gt;=</span> <span class="n">arr1</span><span class="o">.</span><span class="na">length</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">arr1</span><span class="o">[</span><span class="n">ptr1</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">m2</span> <span class="o">=</span> <span class="n">ptr2</span> <span class="o">&gt;=</span> <span class="n">arr2</span><span class="o">.</span><span class="na">length</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">arr2</span><span class="o">[</span><span class="n">ptr2</span><span class="o">]);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">m1</span> <span class="o">&gt;</span> <span class="n">m2</span><span class="o">){</span>
+                <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">m1</span> <span class="o">&lt;</span> <span class="n">m2</span><span class="o">){</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">ptr1</span><span class="o">++;</span>
+            <span class="n">ptr2</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="167-两数之和-ii---输入有序数组">167. 两数之和 II - 输入有序数组</h2><p>给定一个已按照 升序排列 的整数数组 numbers ，请你从数组中找出两个数满足相加之和等于目标数 target 。</p><p>函数应该以长度为 2 的整数数组的形式返回这两个数的下标值。numbers 的下标 从 1 开始计数 ，所以答案数组应当满足 1 &lt;= answer[0] &lt; answer[1] &lt;= numbers.length 。</p><p>你可以假设每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。</p><p>示例 1：</p><p>输入：numbers = [2,7,11,15], target = 9 输出：[1,2] 解释：2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。</p><p>双指针的正确性：</p><ul><li>如果numbers[l] + numbers[r] &lt; target，无论再缩小r同时增大l都不会让和更大，只能保持r，增大l。</li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">twoSum</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">numbers</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">+</span> <span class="n">numbers</span><span class="o">[</span><span class="n">r</span><span class="o">];</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">==</span> <span class="n">target</span><span class="o">){</span>
+                <span class="n">res</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="n">res</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sum</span> <span class="o">&lt;</span> <span class="n">target</span><span class="o">){</span>
+                <span class="n">l</span><span class="o">++;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">r</span><span class="o">--;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="168-excel表列名称">168. Excel表列名称</h2><p>给定一个正整数，返回它在 Excel 表中相对应的列名称。</p><p>例如，</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -29776,6 +29906,220 @@ B: [3,2,1,4,7]
         <span class="o">}</span>
         <span class="n">res</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">cnt</span><span class="o">,</span> <span class="n">res</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="981-基于时间的键值存储">981. 基于时间的键值存储</h2><p>创建一个基于时间的键值存储类 TimeMap，它支持下面两个操作：</p><ol><li>set(string key, string value, int timestamp.</li></ol><ul><li>存储键 key、值 value，以及给定的时间戳 timestamp。</li></ul><ol><li>get(string key, int timestamp)</li></ol><ul><li>返回先前调用 set(key, value, timestamp_prev) 所存储的值，其中 timestamp_prev &lt;= timestamp。</li><li>如果有多个这样的值，则返回对应最大的 timestamp_prev 的那个值。</li><li>如果没有值，则返回空字符串（”“）。</li></ul><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">inputs</span> <span class="o">=</span> <span class="o">[</span><span class="s">"TimeMap"</span><span class="o">,</span><span class="s">"set"</span><span class="o">,</span><span class="s">"get"</span><span class="o">,</span><span class="s">"get"</span><span class="o">,</span><span class="s">"set"</span><span class="o">,</span><span class="s">"get"</span><span class="o">,</span><span class="s">"get"</span><span class="o">],</span> <span class="n">inputs</span> <span class="o">=</span> <span class="o">[[],[</span><span class="s">"foo"</span><span class="o">,</span><span class="s">"bar"</span><span class="o">,</span><span class="mi">1</span><span class="o">],[</span><span class="s">"foo"</span><span class="o">,</span><span class="mi">1</span><span class="o">],[</span><span class="s">"foo"</span><span class="o">,</span><span class="mi">3</span><span class="o">],[</span><span class="s">"foo"</span><span class="o">,</span><span class="s">"bar2"</span><span class="o">,</span><span class="mi">4</span><span class="o">],[</span><span class="s">"foo"</span><span class="o">,</span><span class="mi">4</span><span class="o">],[</span><span class="s">"foo"</span><span class="o">,</span><span class="mi">5</span><span class="o">]]</span>
+<span class="n">输出</span><span class="err">：</span><span class="o">[</span><span class="kc">null</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="s">"bar"</span><span class="o">,</span><span class="s">"bar"</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="s">"bar2"</span><span class="o">,</span><span class="s">"bar2"</span><span class="o">]</span>
+<span class="n">解释</span><span class="err">：</span>  
+<span class="nc">TimeMap</span> <span class="n">kv</span><span class="o">;</span>   
+<span class="n">kv</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="s">"bar"</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span> <span class="c1">// 存储键 "foo" 和值 "bar" 以及时间戳 timestamp = 1   </span>
+<span class="n">kv</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>  <span class="c1">// 输出 "bar"   </span>
+<span class="n">kv</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span> <span class="c1">// 输出 "bar" 因为在时间戳 3 和时间戳 2 处没有对应 "foo" 的值，所以唯一的值位于时间戳 1 处（即 "bar"）   </span>
+<span class="n">kv</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="s">"bar2"</span><span class="o">,</span> <span class="mi">4</span><span class="o">);</span>   
+<span class="n">kv</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="mi">4</span><span class="o">);</span> <span class="c1">// 输出 "bar2"   </span>
+<span class="n">kv</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span> <span class="c1">// 输出 "bar2"   </span>
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">TimeMap</span> <span class="o">{</span>
+    <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">map</span><span class="o">;</span>
+    <span class="cm">/** Initialize your data structure here. */</span>
+    <span class="kd">public</span> <span class="nf">TimeMap</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+    <span class="c1">//相同的key需要按照时间戳排序</span>
+    <span class="c1">//&lt;key:&lt;timestamp:value&gt;&gt;</span>
+    <span class="c1">//timestamps 都是严格递增的。所以不会出现timestamp重复的情况</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">,</span> <span class="nc">String</span> <span class="n">value</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;());</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">timestamp</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">tmp</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">get</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+        <span class="nc">String</span> <span class="n">res</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tmp</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="nc">Integer</span> <span class="n">floorKey</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="na">floorKey</span><span class="o">(</span><span class="n">timestamp</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">floorKey</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">floorKey</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="s">""</span> <span class="o">:</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>使用Map+List，哈希 +二分：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">TimeMap</span> <span class="o">{</span>
+    <span class="kd">class</span> <span class="nc">Pair</span> <span class="kd">implements</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">timestamp</span><span class="o">;</span>
+        <span class="nc">String</span> <span class="n">value</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="o">(</span><span class="kt">int</span> <span class="n">timestamp</span><span class="o">,</span> <span class="nc">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">value</span><span class="o">.</span><span class="na">hashCode</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="nc">Pair</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Pair</span> <span class="n">pair2</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Pair</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+                <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">timestamp</span> <span class="o">==</span> <span class="n">pair2</span><span class="o">.</span><span class="na">timestamp</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">pair2</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="nc">Pair</span> <span class="n">pair2</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">timestamp</span> <span class="o">!=</span> <span class="n">pair2</span><span class="o">.</span><span class="na">timestamp</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">timestamp</span> <span class="o">-</span> <span class="n">pair2</span><span class="o">.</span><span class="na">timestamp</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">pair2</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;&gt;</span> <span class="n">map</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TimeMap</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;&gt;();</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">,</span> <span class="nc">String</span> <span class="n">value</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;());</span>
+        <span class="n">pairs</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="n">timestamp</span><span class="o">,</span> <span class="n">value</span><span class="o">));</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">pairs</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">get</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;());</span>
+        <span class="c1">// 使用一个大于所有 value 的字符串，以确保在 pairs 中含有 timestamp 的情况下也返回大于 timestamp 的位置</span>
+        <span class="nc">Pair</span> <span class="n">pair</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="n">timestamp</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">((</span><span class="kt">char</span><span class="o">)</span> <span class="mi">127</span><span class="o">));</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">binarySearch</span><span class="o">(</span><span class="n">pairs</span><span class="o">,</span> <span class="n">pair</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">pairs</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">).</span><span class="na">value</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="s">""</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">binarySearch</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span><span class="o">,</span> <span class="nc">Pair</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">high</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">pairs</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">high</span><span class="o">).</span><span class="na">compareTo</span><span class="o">(</span><span class="n">target</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">low</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">low</span><span class="o">;</span>
+            <span class="nc">Pair</span> <span class="n">pair</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">mid</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">pair</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">target</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">high</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">low</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump989"></span></p><h2 id="989-数组形式的整数加法">989. 数组形式的整数加法</h2><p>对于非负整数 X 而言，X 的数组形式是每位数字按从左到右的顺序形成的数组。例如，如果 X = 1231，那么其数组形式为 [1,2,3,1]。</p><p>给定非负整数 X 的数组形式 A，返回整数 X+K 的数组形式。 示例 3：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
