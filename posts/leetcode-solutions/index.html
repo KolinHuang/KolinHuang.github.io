@@ -33526,6 +33526,64 @@ B: [3,2,1,4,7]
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="1838-最高频元素的频数">1838. 最高频元素的频数</h2><p>元素的 频数 是该元素在一个数组中出现的次数。</p><p>给你一个整数数组 nums 和一个整数 k 。在一步操作中，你可以选择 nums 的一个下标，并将该下标对应元素的值增加 1 。</p><p>执行最多 k 次操作后，返回数组中最高频元素的 最大可能频数 。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">nums</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">],</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">输出</span><span class="err">：</span><span class="mi">3</span>
+<span class="n">解释</span><span class="err">：</span><span class="n">对第一个元素执行</span> <span class="mi">3</span> <span class="n">次递增操作</span><span class="err">，</span><span class="n">对第二个元素执</span> <span class="mi">2</span> <span class="n">次递增操作</span><span class="err">，</span><span class="n">此时</span> <span class="n">nums</span> <span class="o">=</span> <span class="o">[</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">]</span> <span class="err">。</span>
+<span class="mi">4</span> <span class="n">是数组中最高频元素</span><span class="err">，</span><span class="n">频数是</span> <span class="mi">3</span> <span class="err">。</span>
+</pre></table></code></div></div><p><strong>提示：</strong></p><ul><li><code class="language-plaintext highlighter-rouge">1 &lt;= nums.length &lt;= 105</code></li><li><code class="language-plaintext highlighter-rouge">1 &lt;= nums[i] &lt;= 105</code></li><li><code class="language-plaintext highlighter-rouge">1 &lt;= k &lt;= 105</code></li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">maxFrequency</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">nums</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//滑动窗口</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">//这也太妙了~</span>
+        <span class="c1">//假设数组为1，4，8</span>
+        <span class="c1">//第一次是1和4，把1往4凑，那么total是3，比k小，继续移动r</span>
+        <span class="c1">//第二次是4和8，但是是乘(2-0)，也就是(8-4)*2，为什么呢？</span>
+        <span class="c1">//因为第一次total=3还保留着，</span>
+        <span class="c1">//这意味着从1到8的步数，在第一次已经走了3步了，这次只需要补4步就行了~</span>
+        <span class="c1">//当total &gt; k时，从左边缩减窗口，只需要减去nums[r] - nums[l]即可。</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">r</span><span class="o">){</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)(</span><span class="n">nums</span><span class="o">[</span><span class="n">r</span><span class="o">]</span> <span class="o">-</span> <span class="n">nums</span><span class="o">[</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="o">*</span> <span class="o">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">l</span><span class="o">);</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">total</span> <span class="o">&gt;</span> <span class="n">k</span><span class="o">){</span><span class="c1">//从左边缩减窗口</span>
+                <span class="n">total</span> <span class="o">-=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)(</span><span class="n">nums</span><span class="o">[</span><span class="n">r</span><span class="o">]</span> <span class="o">-</span> <span class="n">nums</span><span class="o">[</span><span class="n">l</span><span class="o">]);</span>
+                <span class="n">l</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">r</span> <span class="o">-</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><h2 id="1846-减小和重新排列数组后的最大元素">1846. 减小和重新排列数组后的最大元素</h2><p>给你一个正整数数组 <code class="language-plaintext highlighter-rouge">arr</code> 。请你对 <code class="language-plaintext highlighter-rouge">arr</code> 执行一些操作（也可以不进行任何操作），使得数组满足以下条件：</p><ul><li><code class="language-plaintext highlighter-rouge">arr</code> 中 <strong>第一个</strong> 元素必须为 <code class="language-plaintext highlighter-rouge">1</code> 。</li><li>任意相邻两个元素的差的绝对值 <strong>小于等于</strong> <code class="language-plaintext highlighter-rouge">1</code> ，也就是说，对于任意的 <code class="language-plaintext highlighter-rouge">1 &lt;= i &lt; arr.length</code> （<strong>数组下标从 0 开始</strong>），都满足 <code class="language-plaintext highlighter-rouge">abs(arr[i] - arr[i - 1]) &lt;= 1</code> 。<code class="language-plaintext highlighter-rouge">abs(x)</code> 为 <code class="language-plaintext highlighter-rouge">x</code> 的绝对值。</li></ul><p>你可以执行以下 2 种操作任意次：</p><ul><li><strong>减小</strong> <code class="language-plaintext highlighter-rouge">arr</code> 中任意元素的值，使其变为一个 <strong>更小的正整数</strong> 。</li><li><strong>重新排列</strong> <code class="language-plaintext highlighter-rouge">arr</code> 中的元素，你可以以任意顺序重新排列。</li></ul><p>请你返回执行以上操作后，在满足前文所述的条件下，<code class="language-plaintext highlighter-rouge">arr</code> 中可能的 <strong>最大值</strong> 。</p><p><strong>示例 1：</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
