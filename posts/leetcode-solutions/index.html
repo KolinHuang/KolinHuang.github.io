@@ -17818,6 +17818,72 @@ n = 101101111
         <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="268-丢失的数字">268. 丢失的数字</h2><p>给定一个包含 <code class="language-plaintext highlighter-rouge">[0, n]</code> 中 <code class="language-plaintext highlighter-rouge">n</code> 个数的数组 <code class="language-plaintext highlighter-rouge">nums</code> ，找出 <code class="language-plaintext highlighter-rouge">[0, n]</code> 这个范围内没有出现在数组中的那个数。</p><p><strong>进阶：</strong></p><ul><li>你能否实现线性时间复杂度、仅使用额外常数空间的算法解决此问题?</li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">missingNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//做下标映射，如果每个位置都被成功映射了一次，那么缺失的数字就是n</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">k</span> <span class="o">+=</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">n</span><span class="o">)</span>  <span class="k">continue</span><span class="o">;</span>
+            <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">-=</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>异或：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">missingNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//异或，最后只剩下缺失的数字</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="n">num</span> <span class="o">^=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">)</span>   <span class="n">num</span> <span class="o">^=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">num</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><h2 id="274-h-指数">274. H 指数</h2><p>给定一位研究者论文被引用次数的数组（被引用次数是非负整数）。编写一个方法，计算出研究者的 h 指数。</p><p>h 指数的定义：h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）总共有 h 篇论文分别被引用了至少 h 次。且其余的 N - h 篇论文每篇被引用次数 不超过 h 次。</p><p>例如：某人的 h 指数是 20，这表示他已发表的论文中，每篇被引用了至少 20 次的论文总共有 20 篇。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -18062,6 +18128,188 @@ n = 101101111
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
 
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="289-生命游戏">289. 生命游戏</h2><p>根据 百度百科 ，生命游戏，简称为生命，是英国数学家约翰·何顿·康威在 1970 年发明的细胞自动机。</p><p>给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：</p><p>如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡； 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活； 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡； 如果死细胞周围正好有三个活细胞，则该位置死细胞复活； 下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。给你 m x n 网格面板 board 的当前状态，返回下一个状态。</p><p>实际上就是统计周围活细胞的个数，根据当前细胞的状态进行转移。</p><p>为了支持原地算法，额外增加两个状态-1和-2，-1表示从前是1，但是需要变为0；-2表示从前是0，需要变为1。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">gameOfLife</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">board</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//八个相邻位置</span>
+        <span class="cm">/*生存定律：
+            1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+            2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+            3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+            4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+            对于一个活细胞来说，如果周围只有1个活细胞，那它必死
+                            如果周围有2个或3个活细胞，那它还活着
+                            如果周围有4,5,6,7,8个活细胞，那它必死
+            对于一个死细胞来说，如果周围有3个活细胞，那它复活                            
+        */</span>
+        <span class="c1">//需要返回下一个状态</span>
+        <span class="c1">//那么当前状态的变迁应当不会影响其他细胞的状态吧？</span>
+        <span class="c1">//那岂不是只需要遍历即可？</span>
+        <span class="c1">//试试看</span>
+
+        <span class="c1">//原地算法，不能有额外空间</span>
+        <span class="c1">//那如果细胞状态需要变化的时候，将其在原状态的基础上-2</span>
+        <span class="c1">// 0需要变为1， 那先变为-2</span>
+        <span class="c1">// 1需要变为0， 那先变为-1</span>
+        <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="c1">//先判断是活细胞还是死细胞</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="c1">//是死的</span>
+                    <span class="c1">//能复活吗？</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">judge</span><span class="o">(</span><span class="n">board</span><span class="o">,</span><span class="n">i</span><span class="o">,</span><span class="n">j</span><span class="o">,</span><span class="mi">3</span><span class="o">)){</span>
+                        <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">-=</span> <span class="mi">2</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="c1">//是活的</span>
+                    <span class="c1">//会死吗？</span>
+                    <span class="k">if</span><span class="o">(!(</span><span class="n">judge</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span><span class="mi">2</span><span class="o">)</span> <span class="o">||</span> <span class="n">judge</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span><span class="mi">3</span><span class="o">))){</span>
+                        <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">-=</span> <span class="mi">2</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="o">){</span>
+                    <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+                    <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">directions</span> <span class="o">=</span> <span class="err">。。。</span><span class="o">;</span><span class="c1">//博客语法限制，只能删除了</span>
+    <span class="kt">boolean</span> <span class="nf">judge</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">board</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">directions</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">new_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">directions</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">new_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">directions</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">new_x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">new_x</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">new_y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">new_y</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">new_x</span><span class="o">][</span><span class="n">new_y</span><span class="o">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="n">new_x</span><span class="o">][</span><span class="n">new_y</span><span class="o">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)){</span>
+                <span class="n">cnt</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">cnt</span> <span class="o">==</span> <span class="n">target</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="292-nim-游戏">292. Nim 游戏</h2><p>你和你的朋友，两个人一起玩 Nim 游戏：</p><p>桌子上有一堆石头。 你们轮流进行自己的回合，你作为先手。 每一回合，轮到的人拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。 假设你们每一步都是最优解。请编写一个函数，来判断你是否可以在给定石头数量为 n 的情况下赢得游戏。如果可以赢，返回 true；否则，返回 false 。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">输出</span><span class="err">：</span><span class="kc">false</span> 
+<span class="n">解释</span><span class="err">：</span><span class="n">如果堆中有</span> <span class="mi">4</span> <span class="n">块石头</span><span class="err">，</span><span class="n">那么你永远不会赢得比赛</span><span class="err">；</span>
+<span class="err"> </span>    <span class="n">因为无论你拿走</span> <span class="mi">1</span> <span class="n">块</span><span class="err">、</span><span class="mi">2</span> <span class="n">块</span> <span class="n">还是</span> <span class="mi">3</span> <span class="n">块石头</span><span class="err">，</span><span class="n">最后一块石头总是会被你的朋友拿走</span><span class="err">。</span>
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canWinNim</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//给定总数量为n，每次可以拿1到3块，我先拿</span>
+        <span class="c1">//能否拿到最后一块石头</span>
+        <span class="c1">//粗鲁一点，直接全部拿3块，快速消灭</span>
+        <span class="c1">//我拿完剩4块，赢；拿完剩5块输，拿完剩6块输，拿完剩7块输，拿完剩8块</span>
+        <span class="c1">//1 -&gt; 7; 2-&gt; 6, 3-&gt; 5;</span>
+        <span class="c1">//8块是我赢</span>
+        <span class="c1">//拿完剩9块输</span>
+        <span class="c1">//拿完剩10块输</span>
+        <span class="c1">//拿完剩11块输</span>
+        <span class="c1">//12块赢</span>
+        <span class="c1">// if(n &lt; 4)   return true;</span>
+        <span class="c1">// if((n-1) % 4 == 0 || (n-2) % 4 == 0 || (n-3) % 4 == 0)  return true;</span>
+        <span class="c1">// return false;</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump297"></span></p><h2 id="297序列化二叉树">297.序列化二叉树</h2><p>请实现两个函数，分别用来序列化和反序列化二叉树。</p><p>示例:</p><p>你可以将以下二叉树：</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -25589,29 +25837,71 @@ k = 8,
 23
 24
 25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
 </pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findUnsortedSubarray</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">//有可能这个子数组长度为0</span>
-        <span class="c1">//初始化指针，[start, end]表示需要排序的子数组</span>
-        <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="c1">//max记录[0,i]的最大值</span>
-        <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
-            <span class="c1">//每找到一个逆序对，即nums[i] &lt; max，就从[0, start]中搜索第一个比nums[i]大的数，更新start</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">){</span>
-                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
-                        <span class="c1">//往前更新start</span>
-                        <span class="n">start</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
-                        <span class="k">break</span><span class="o">;</span>
-                    <span class="o">}</span>
-                <span class="o">}</span>
-                <span class="c1">//更新end</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+        <span class="c1">//对子数组排序， 整个数组都会有序</span>
+        <span class="c1">//从左往右遍历，找到第一个失序的数字，即nums[i] &gt; nums[i+1]</span>
+        <span class="c1">//从右往左遍历，找到第一个失序的数字，即nums[i] &lt; nums[i-1]</span>
+        <span class="c1">//以这个区间作为当前的最小数组，只要区间左边的数字都比区间数字小，区间右边的数字都比区间大</span>
+        <span class="c1">//那么就符合要求</span>
+        <span class="c1">//那么就要找出区间的最大值和最小值</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
             <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="o">--</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//说明存在失序数组，从[l,r]里找到最小值和最大值</span>
+        <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="mi">100001</span><span class="o">,</span> <span class="n">max</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100001</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">l</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
             <span class="n">max</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">max</span><span class="o">,</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
         <span class="o">}</span>
-        <span class="k">return</span> <span class="n">end</span> <span class="o">==</span> <span class="n">start</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">//找到了最大最小值，往左右扩张</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">min</span><span class="o">){</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">r</span><span class="o">;</span> <span class="o">--</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">r</span> <span class="o">-</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump605"></span></p><h2 id="605-种花问题">605. 种花问题</h2><p>假设你有一个很长的花坛，一部分地块种植了花，另一部分却没有。可是，花卉不能种植在相邻的地块上，它们会争夺水源，两者都会死去。</p><p>给定一个花坛（表示为一个数组包含0和1，其中0表示没种植花，1表示种植了花），和一个数 n 。能否在不打破种植规则的情况下种入 n 朵花？能则返回True，不能则返回False。</p><p>示例 1:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -25718,6 +26008,84 @@ k = 8,
             <span class="n">count</span> <span class="o">+=</span> <span class="o">(</span><span class="n">flowerbed</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">prev</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="611-有效三角形的个数">611. 有效三角形的个数</h2><p>给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。</p><p>示例1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="nl">输入:</span> <span class="o">[</span><span class="mi">2</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">]</span>
+<span class="nl">输出:</span> <span class="mi">3</span>
+<span class="nl">解释:</span>
+<span class="nl">有效的组合是:</span> 
+<span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span> <span class="o">(</span><span class="n">使用第一个</span> <span class="mi">2</span><span class="o">)</span>
+<span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span> <span class="o">(</span><span class="n">使用第二个</span> <span class="mi">2</span><span class="o">)</span>
+<span class="mi">2</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span>
+</pre></table></code></div></div><p><strong>注意:</strong></p><ol><li>数组长度不超过1000。</li><li>数组里整数的范围为 [0, 1000]。</li></ol><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">triangleNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//两边之和大于第三边即可</span>
+        <span class="nc">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">nums</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">;</span> <span class="o">++</span><span class="n">a</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="o">++</span><span class="n">b</span><span class="o">){</span>
+                <span class="c1">//确定下nums[a]和nums[b]后，二分查找大于nums[a]+nums[b]的第一个位置</span>
+                <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">binarySearch</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">nums</span><span class="o">[</span><span class="n">a</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">b</span><span class="o">]);</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">idx</span> <span class="o">-</span> <span class="n">b</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">binarySearch</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="c1">//二分查找第一个大于target的数字</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">l</span><span class="o">+</span><span class="n">r</span><span class="o">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="o">){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump617"></span></p><h2 id="617合并二叉树">617.合并二叉树</h2><p>给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。</p><p>你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。</p><p>示例 1:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -28372,6 +28740,90 @@ B: [3,2,1,4,7]
         <span class="k">return</span> <span class="n">image</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="743-网络延迟时间">743. 网络延迟时间</h2><p>有 n 个网络节点，标记为 1 到 n。</p><p>给你一个列表 times，表示信号经过 有向 边的传递时间。 times[i] = (ui, vi, wi)，其中 ui 是源节点，vi 是目标节点， wi 是一个信号从源节点传递到目标节点的时间。</p><p>现在，从某个节点 K 发出一个信号。需要多久才能使所有节点都收到信号？如果不能使所有节点收到信号，返回 -1 。</p><p>单源最短路，计算从源点到各点的距离，如果有INF存在，说明有到达不了的顶点，否则取距离最远的。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">networkDelayTime</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">times</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//单源最短路</span>
+        <span class="kt">int</span> <span class="no">INF</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visited</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">nbrs</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">nbrs</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="no">INF</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">//建图</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">time</span> <span class="o">:</span> <span class="n">times</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">time</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">time</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">time</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+            <span class="n">nbrs</span><span class="o">[</span><span class="n">u</span><span class="o">][</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">dist</span><span class="o">,</span> <span class="no">INF</span><span class="o">);</span>
+        <span class="n">dist</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">dist</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="c1">//找出一个距离k最近的顶点</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">visited</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">u</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">dist</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="o">[</span><span class="n">u</span><span class="o">])){</span>
+                    <span class="n">u</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">visited</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">){</span>
+                <span class="n">dist</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dist</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">dist</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">+</span> <span class="n">nbrs</span><span class="o">[</span><span class="n">u</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">dist</span><span class="o">).</span><span class="na">max</span><span class="o">().</span><span class="na">getAsInt</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">res</span> <span class="o">==</span> <span class="no">INF</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">res</span><span class="o">;</span>
+        
+    <span class="o">}</span>
+    
+
+<span class="o">}</span>
+
+
 </pre></table></code></div></div><h2 id="752-打开转盘锁">752. 打开转盘锁</h2><p>你有一个带有四个圆形拨轮的转盘锁。每个拨轮都有10个数字： ‘0’, ‘1’, ‘2’, ‘3’, ‘4’, ‘5’, ‘6’, ‘7’, ‘8’, ‘9’ 。每个拨轮可以自由旋转：例如把 ‘9’ 变为 ‘0’，’0’ 变为 ‘9’ 。每次旋转都只能旋转一个拨轮的一位数字。</p><p>锁的初始数字为 ‘0000’ ，一个代表四个拨轮的数字的字符串。</p><p>列表 deadends 包含了一组死亡数字，一旦拨轮的数字和列表里的任何一个元素相同，这个锁将会被永久锁定，无法再被旋转。</p><p>字符串 target 代表可以解锁的数字，你需要给出最小的旋转次数，如果无论如何不能解锁，返回 -1。</p><p>示例 1:</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -28866,6 +29318,80 @@ B: [3,2,1,4,7]
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">cnt</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="802-找到最终的安全状态">802. 找到最终的安全状态</h2><p>在有向图中，以某个节点为起始节点，从该点出发，每一步沿着图中的一条有向边行走。如果到达的节点是终点（即它没有连出的有向边），则停止。</p><p>对于一个起始节点，如果从该节点出发，无论每一步选择沿哪条有向边行走，最后必然在有限步内到达终点，则将该起始节点称作是 安全 的。</p><p>返回一个由图中所有安全的起始节点组成的数组作为答案。答案数组中的元素应当按 升序 排列。</p><p>该有向图有 n 个节点，按 0 到 n - 1 编号，其中 n 是 graph 的节点数。图以下述形式给出：graph[i] 是编号 j 节点的一个列表，满足 (i, j) 是图的一条有向边。</p><p>示例：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">graph</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">],[</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">],[</span><span class="mi">5</span><span class="o">],[</span><span class="mi">0</span><span class="o">],[</span><span class="mi">5</span><span class="o">],[],[]]</span>
+<span class="n">输出</span><span class="err">：</span><span class="o">[</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">6</span><span class="o">]</span>
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="nf">eventualSafeNodes</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">graph</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//无论每一步选择沿哪条有向边行走，最后`必然在有限步内到达终点，则将该起始节点称作是 安全 的。</span>
+        <span class="c1">//graph[i]中的节点j，表示存在从i到j的一条有向边。</span>
+        <span class="c1">//首先节点要有到达终点的路径，其次该节点的所有路径都能到达终点</span>
+        <span class="c1">//终点就是出度为0的顶点</span>
+        <span class="c1">//如果有环的话，那肯定不是安全的</span>
+        <span class="c1">//只要一个顶点不处于环中，那就是安全的</span>
+        <span class="c1">//从每个顶点出发，如果有环，那就把这条路径上的节点都着色为不安全。</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">color</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dfs</span><span class="o">(</span><span class="n">graph</span><span class="o">,</span> <span class="n">color</span><span class="o">,</span> <span class="n">i</span><span class="o">)){</span>
+                <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//状态0表示未访问，状态1表示正在标记，状态2表示安全</span>
+    <span class="kt">boolean</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">g</span><span class="o">,</span><span class="kt">int</span><span class="o">[]</span> <span class="n">color</span><span class="o">,</span> <span class="kt">int</span> <span class="n">u</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">color</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">==</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">color</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">g</span><span class="o">[</span><span class="n">u</span><span class="o">]){</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">dfs</span><span class="o">(</span><span class="n">g</span><span class="o">,</span><span class="n">color</span><span class="o">,</span> <span class="n">v</span><span class="o">)){</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">color</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump830"></span></p><h2 id="830-较大分组的位置">830. 较大分组的位置</h2><p>在一个由小写字母构成的字符串 s 中，包含由一些连续的相同字符所构成的分组。</p><p>例如，在字符串 s = “abbxxxxzyy” 中，就含有 “a”, “bb”, “xxxx”, “z” 和 “yy” 这样的一些分组。</p><p>分组可以用区间 [start, end] 表示，其中 start 和 end 分别表示该分组的起始和终止位置的下标。上例中的 “xxxx” 分组用区间表示为 [3,6] 。</p><p>我们称所有包含大于或等于三个连续字符的分组为 较大分组 。</p><p>找到每一个 较大分组 的区间，按起始位置下标递增顺序排序后，返回结果。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
