@@ -20426,6 +20426,86 @@ root[1] = rob(root.left)[0] + rob(root.right)[0] + root.val;
 
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></table></code></div></div><h2 id="345-反转字符串中的元音字母">345. 反转字符串中的元音字母</h2><p>编写一个函数，以字符串作为输入，反转该字符串中的元音字母。</p><p><strong>示例 1：</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre>输入："hello"
+输出："holle"
+</pre></table></code></div></div><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">reverseVowels</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// aeiou</span>
+        <span class="c1">// 双指针可以吗？</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>    <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Character</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;&gt;();</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'a'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'e'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'i'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'o'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'u'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'A'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'E'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'I'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'O'</span><span class="o">);</span>
+        <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="sc">'U'</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">l</span><span class="o">]))</span>  <span class="n">l</span><span class="o">++;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">r</span><span class="o">]))</span>  <span class="n">r</span><span class="o">--;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">r</span><span class="o">)</span>  <span class="k">break</span><span class="o">;</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+            <span class="n">l</span><span class="o">++;</span>
+            <span class="n">r</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">char</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="o">){</span>
+            <span class="kt">char</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump337"></span></p><h2 id="337-打家劫舍-3-1">337. 打家劫舍 3</h2><p>在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。</p><p>计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。</p><p>示例 1:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -25215,6 +25295,76 @@ k = 8,
         <span class="o">}</span>   
         <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
     <span class="o">}</span>    
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="541-反转字符串-ii">541. 反转字符串 II</h2><p>给定一个字符串 s 和一个整数 k，从字符串开头算起，每 2k 个字符反转前 k 个字符。</p><p>如果剩余字符少于 k 个，则将剩余字符全部反转。 如果剩余字符小于 2k 但大于或等于 k 个，则反转前 k 个字符，其余字符保持原样。</p><p>示例 1：</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="n">输入</span><span class="err">：</span><span class="n">s</span> <span class="o">=</span> <span class="s">"abcdefg"</span><span class="o">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">输出</span><span class="err">：</span><span class="s">"bacdfeg"</span>
+</pre></table></code></div></div><p>提示：</p><ul><li>1 &lt;= s.length &lt;= 10^4</li><li>s 仅由小写英文组成</li><li>1 &lt;= k &lt;= 10^4</li></ul><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">reverseStr</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//每2k个字符，反转前k个</span>
+        <span class="c1">//那就是先读前k个字符，进行反转，然后再掠过后k个字符</span>
+        <span class="kt">char</span><span class="o">[]</span>  <span class="n">arr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">){</span>
+            <span class="n">reverse</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">l</span> <span class="o">+</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">l</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">char</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">&gt;=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+            <span class="n">l</span><span class="o">++;</span>
+            <span class="n">r</span><span class="o">--;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">char</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="o">){</span>
+            <span class="kt">char</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump543"></span></p><h2 id="543二叉树的直径">543.二叉树的直径</h2><p>给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。</p><p>示例 : 给定二叉树</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -34572,6 +34722,46 @@ B: [3,2,1,4,7]
             <span class="n">r</span><span class="o">++;</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="1448-统计二叉树中好节点的数目">1448. 统计二叉树中好节点的数目</h2><p>给你一棵根为 <code class="language-plaintext highlighter-rouge">root</code> 的二叉树，请你返回二叉树中好节点的数目。</p><p>「好节点」X 定义为：从根到该节点 X 所经过的节点中，没有任何节点的值大于 X 的值。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">goodNodes</span><span class="o">(</span><span class="nc">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//从根节点到该节点的路径上，没有任何节点的值大于该节点</span>
+        <span class="c1">//那么就要记录当前路径的最大值</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">cnt</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">int</span> <span class="n">cnt</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="nc">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxVal</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>    <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">maxVal</span> <span class="o">&lt;=</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
+            <span class="n">cnt</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="n">maxVal</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">maxVal</span><span class="o">,</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">maxVal</span><span class="o">);</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">maxVal</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></table></code></div></div><p><span id="jump1489"></span></p><h2 id="1489-找到最小生成树里的关键边和伪关键边">1489. 找到最小生成树里的关键边和伪关键边</h2><p>给你一个 n 个点的带权无向连通图，节点编号为 0 到 n-1 ，同时还有一个数组 edges ，其中 edges[i] = [fromi, toi, weighti] 表示在 fromi 和 toi 节点之间有一条带权无向边。最小生成树 (MST) 是给定图中边的一个子集，它连接了所有节点且没有环，而且这些边的权值和最小。</p><p>请你找到给定图中最小生成树的所有关键边和伪关键边。如果从图中删去某条边，会导致最小生成树的权值和增加，那么我们就说它是一条关键边。伪关键边则是可能会出现在某些最小生成树中但不会出现在所有最小生成树中的边。</p><p>请注意，你可以分别以任意顺序返回关键边的下标和伪关键边的下标。</p><p>先用Kruskal算法找出最小生成树，然后再遍历每条边</p><ul><li>关键边：如果最小生成树中删去某条边，会导致最小生成树的权值和增加，那么我们就说它是一条关键边。也就是说，如果设原图最小生成树的权值为value，那么去掉这条边后：<ul><li>要么整个图不连通，不存在最小生成树；</li><li>要么整个图联通，对应的最小生成树的权值为 v，其严格大于value。</li></ul></li><li>伪关键边：可能会出现在某些最小生成树中但不会出现在所有最小生成树中的边。也就是说，我们可以在计算最小生成树的过程中，最先考虑这条边，即<strong>最先将这条边的两个端点在并查集中合并</strong>。设最终得到的最小生成树权值为 v，如果 v=value，那么这条边就是伪关键边。</li></ul><p>需要注意的是，关键边也满足伪关键边对应的性质。因此，我们首先对原图执行Kruskal 算法，得到最小生成树的权值value，随后我们枚举每一条边，首先根据上面的方法判断其是否是关键边，如果不是关键边，再判断其是否是伪关键边。</p><div class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
